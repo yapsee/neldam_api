@@ -1,0 +1,20 @@
+<?php
+namespace App\DataFixtures;
+use App\Entity\Roles;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
+class ProfilFixtures extends Fixture
+{
+    public function load(ObjectManager $manager)
+    {
+        $libelle=array("ADMIN_SYS","ADMIN","ADMINPARTENAIRE","ADMIN","CAISSIER","USER");
+        
+        for($i=0;$i<count($libelle);$i++){
+            $role= new Roles();
+            $role->setLibelle($libelle[$i]);
+           
+            $manager->persist($role);
+        }
+        $manager->flush();
+    }
+}

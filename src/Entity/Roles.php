@@ -25,6 +25,8 @@ class Roles
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="role")
+     * 
+     * @ORM\Column(type="string", length=180)
      */
     private $users;
 

@@ -22,7 +22,9 @@ class AdminSysFixtures extends Fixture
         $user->setPassword($password);
         $user->setRoles(['ROLE_ADMIN_SYS']);
         $user->setPrenom('Yafsa');
+        $user->setRole('ADMIN_SYS');
         $user->setNom('sy');
+        $user->setIsActive(true);
         $user->setEmail('yapsasee@gmail.com');
         $manager->persist($user);
         $manager->flush();
