@@ -3,8 +3,13 @@ namespace App\DataFixtures;
 use App\Entity\Roles;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+
+/**
+ * @Route("/api", name="")
+ */
 class RolesFixtures extends Fixture
 {
+    
     public function load(ObjectManager $manager)
     {
         $libelle=array("ADMIN_SYS","ADMIN","ADMINPARTENAIRE","ADMIN","CAISSIER","USER");
