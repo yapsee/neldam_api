@@ -4,9 +4,6 @@ use App\Entity\Roles;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-/**
- * @Route("/api", name="")
- */
 class RolesFixtures extends Fixture
 {
     
