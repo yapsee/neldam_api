@@ -2,6 +2,10 @@ security:
     encoders:
         App\Entity\User:
             algorithm: auto
+    role_hierarchy:    
+        ROLE_ADMIN_SYS: ROLE_ADMIN
+        ROLE_ADMIN: ROLE_CAISSIER
+
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
