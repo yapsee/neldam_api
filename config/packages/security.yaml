@@ -3,8 +3,8 @@ security:
         App\Entity\User:
             algorithm: auto
     role_hierarchy:    
-        ROLE_ADMIN_SYS: ROLE_ADMIN
-        ROLE_ADMIN: ROLE_CAISSIER
+        ROLE_ADMIN_: ROLE_CAISSIER
+        ROLE_ADMIN_SYS: [ROLE_ADMIN,ROLE_CAISSIER,ROLE_ALLOWED_TO_SWITCH]
 
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -15,9 +15,11 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+       
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        
         login:
             pattern:  ^/login
             stateless: true
@@ -26,6 +28,11 @@ security:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        main:
+            pattern: ^/
+            user_checker: App\security\UserChecker
+            http_basic: ~
+            provider: entity_provider
 
         register:
             pattern:  ^/register
@@ -42,9 +49,7 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
 
-        main:
-            anonymous: true
-
+       
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
