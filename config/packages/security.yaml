@@ -28,11 +28,11 @@ security:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        main:
-            pattern: ^/
-            user_checker: App\security\UserChecker
-            http_basic: ~
-            provider: entity_provider
+        #main:
+            #pattern: ^/
+            #user_checker: App\security\UserChecker
+            #http_basic: ~
+            #provider: entity_provider
 
         register:
             pattern:  ^/register

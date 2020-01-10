@@ -6,12 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource()
  */
-class User implements UserInterface
+class User implements AdvancedUserInterface
 {
     /**
      * @ORM\Id()
@@ -55,6 +56,13 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isActive;
+    
+    public function __construct($username)
+    {
+       $this->IsActive = true;
+       $this->username = $username;
+        
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
@@ -191,5 +199,24 @@ class User implements UserInterface
         $this->role = $role;
 
         return $this;
+    }
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
     }
 }
