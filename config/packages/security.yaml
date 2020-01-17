@@ -48,8 +48,7 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
-
-       
+        # revoir la documentation (nouvelle methode de blocage)    user_checker: App/security/UserCkecker
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

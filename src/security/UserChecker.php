@@ -1,30 +1,28 @@
 <?php
 
 namespace App\security;
- 
-use App\Entity\User as AppUser;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
-use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Exception\LockedException;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
+
  
+#autre methode pour gerer le blocage des users but you did it by AdvancedUserInterface
+#in the usy entity
 class UserChecker implements UserCheckerInterface
 {
     public function checkPreAuth(UserInterface $user)
     {
-        if (!$user instanceof AppUser) {
-            return;
-        }
+        if (!$user->getIsActive()) {
+            
+            throw new LockedException("ce membre n'est pas actif");
+                    }
     }
  
     public function checkPostAuth(UserInterface $user)
     {
-        if (!$user instanceof AppUser) {
-            return;
-        }
  
-        // user account is expired, the user may be notified
-        if (!$user->getIsActive()) {
-            throw new AccountExpiredException("ce membre n'est pas actif");
+     if (!$user->getIsActive()) {
+            throw new LockedException("ce membre n'est pas actif");
         }
     }
 }

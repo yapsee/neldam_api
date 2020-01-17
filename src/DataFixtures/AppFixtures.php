@@ -26,7 +26,6 @@ class AppFixtures extends Fixture
         $user1->setIsActive(true);
         $user1->setEmail('yapsee@nldm.com');
         $manager->persist($user1);
-        $manager->flush();
 
         $user2 = new User('admin');
         $user2->setUsername('Diye');

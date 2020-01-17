@@ -2,15 +2,22 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Depot;
+use App\Entity\Partenaire;
+use App\Entity\BankAccount;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ApiResource()
+ * @ApiResource(
+ *  
+ * )
  */
 class User implements AdvancedUserInterface
 {
@@ -61,6 +68,8 @@ class User implements AdvancedUserInterface
     {
        $this->IsActive = true;
        $this->username = $username;
+       $this->depots = new ArrayCollection();
+       $this->bankAccounts = new ArrayCollection();
         
     }
 
@@ -69,6 +78,21 @@ class User implements AdvancedUserInterface
      * @ORM\JoinColumn(nullable=true)
      */
     private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="caissier")
+     */
+    private $depots;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="admin")
+     */
+    private $bankAccounts;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", cascade={"persist", "remove"})
+     */
+    private $userpartner;
 
     public function getId(): ?int
     {
@@ -218,5 +242,79 @@ class User implements AdvancedUserInterface
     public function isEnabled()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setCaissier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
+            // set the owning side to null (unless already changed)
+            if ($depot->getCaissier() === $this) {
+                $depot->setCaissier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BankAccount[]
+     */
+    public function getBankAccounts(): Collection
+    {
+        return $this->bankAccounts;
+    }
+
+    public function addBankAccount(BankAccount $bankAccount): self
+    {
+        if (!$this->bankAccounts->contains($bankAccount)) {
+            $this->bankAccounts[] = $bankAccount;
+            $bankAccount->setAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBankAccount(BankAccount $bankAccount): self
+    {
+        if ($this->bankAccounts->contains($bankAccount)) {
+            $this->bankAccounts->removeElement($bankAccount);
+            // set the owning side to null (unless already changed)
+            if ($bankAccount->getAdmin() === $this) {
+                $bankAccount->setAdmin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUserpartner(): ?Partenaire
+    {
+        return $this->userpartner;
+    }
+
+    public function setUserpartner(?Partenaire $userpartner): self
+    {
+        $this->userpartner = $userpartner;
+
+        return $this;
     }
 }
