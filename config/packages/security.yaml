@@ -39,14 +39,6 @@ security:
             stateless: true
             anonymous: true
 
-        api:
-            pattern:  ^/api
-            stateless: true
-            anonymous: false
-            provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
 
         # revoir la documentation (nouvelle methode de blocage)    user_checker: App/security/UserCkecker
             # activate different ways to authenticate

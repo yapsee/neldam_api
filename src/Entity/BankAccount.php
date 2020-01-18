@@ -26,7 +26,7 @@ class BankAccount
     private $numerocompte;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="bigint", length=255)
      */
     private $solde;
 
@@ -68,12 +68,12 @@ class BankAccount
         return $this;
     }
 
-    public function getSolde(): ?string
+    public function getSolde(): ?int
     {
         return $this->solde;
     }
 
-    public function setSolde(string $solde): self
+    public function setSolde(int $solde): self
     {
         $this->solde = $solde;
 

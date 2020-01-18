@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource()
@@ -19,12 +18,12 @@ class Depot
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="datetime", length=255)
      */
     private $datedepot;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
      */
     private $montant;
 
@@ -44,19 +43,19 @@ class Depot
         return $this->id;
     }
 
-    public function getDatedepot(): ?string
+    public function getDatedepot(): ?\DateTimeInterface
     {
         return $this->datedepot;
     }
 
-    public function setDatedepot(string $datedepot): self
+    public function setDatedepot(\DateTimeInterface $datedepot): self
     {
         $this->datedepot = $datedepot;
 
         return $this;
     }
 
-    public function getMontant(): ?string
+    public function getMontant(): ?int
     {
         return $this->montant;
     }
