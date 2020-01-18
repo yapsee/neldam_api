@@ -52,7 +52,7 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $prenom;
+    #private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -177,17 +177,17 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
+    #public function getPrenom(): ?string
+    #{
+        #return $this->prenom;
+    #}
 
-    public function setPrenom(string $prenom): self
-    {
-        $this->prenom = $prenom;
+    #public function setPrenom(string $prenom): self
+    #{
+        #$this->prenom = $prenom;
 
-        return $this;
-    }
+        #return $this;
+    #}
 
     public function getNom(): ?string
     {
