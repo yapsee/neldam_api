@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Depot;
-use App\Entity\Partenaire;
 use App\Entity\BankAccount;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -52,11 +51,6 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #private $prenom;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $nom;
 
     /**
@@ -88,11 +82,6 @@ class User implements AdvancedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="admin")
      */
     private $bankAccounts;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Partenaire", cascade={"persist", "remove"})
-     */
-    private $userpartner;
 
     public function getId(): ?int
     {
@@ -176,18 +165,6 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
-
-    #public function getPrenom(): ?string
-    #{
-        #return $this->prenom;
-    #}
-
-    #public function setPrenom(string $prenom): self
-    #{
-        #$this->prenom = $prenom;
-
-        #return $this;
-    #}
 
     public function getNom(): ?string
     {
@@ -306,15 +283,5 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    public function getUserpartner(): ?Partenaire
-    {
-        return $this->userpartner;
-    }
-
-    public function setUserpartner(?Partenaire $userpartner): self
-    {
-        $this->userpartner = $userpartner;
-
-        return $this;
-    }
+  
 }

@@ -9,7 +9,7 @@ class RolesFixtures extends Fixture
     
     public function load(ObjectManager $manager)
     {
-        $libelle=array("ADMIN_SYS","ADMIN","ADMIN_PAR","CAISSIER","USER");
+        $libelle=array("ADMIN_SYS","ADMIN","PARTNER","CAISSIER","USER");
         
         for($i=0;$i<count($libelle);$i++){
             $role= new Roles();

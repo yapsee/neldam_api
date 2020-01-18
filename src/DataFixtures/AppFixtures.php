@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Partenaire;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -21,7 +22,6 @@ class AppFixtures extends Fixture
         $password = $this->encoder->encodePassword($user1, 'adminsys');
         $user1->setPassword($password);
         $user1->setRoles(['ROLE_ADMIN_SYS']);
-        $user1->setPrenom('Yafsa');
         $user1->setNom('sy');
         $user1->setIsActive(true);
         $user1->setEmail('yapsee@nldm.com');
@@ -32,22 +32,26 @@ class AppFixtures extends Fixture
         $password = $this->encoder->encodePassword($user2, 'admin');
         $user2->setPassword($password);
         $user2->setRoles(['ROLE_ADMIN']);
-        $user2->setPrenom('fatima');
         $user2->setNom('sy');
         $user2->setIsActive(true);
         $user2->setEmail('fatima@nldm.com');
         $manager->persist($user2);
 
-        $user3= new User('caissier');
-        $user3->setUsername('Doumaket');
-        $password = $this->encoder->encodePassword($user3, 'caissier');
+        $user3= new User('Partner');
+        $user3->setUsername('EDK');
+        $password = $this->encoder->encodePassword($user3, 'edk2020');
         $user3->setPassword($password);
-        $user3->setRoles(['ROLE_CAISSIER']);
-        $user3->setPrenom('abdou');
-        $user3->setNom('samba');
+        $user3->setRoles(['ROLE_PARTNER']);
+        $user3->setNom('EDK SARL');
         $user3->setIsActive(true);
-        $user3->setEmail('abdou@nldm.com');
+        $user3->setEmail('edk@nldm.com');
+        $partenaire =new Partenaire();
+        $partenaire->setNinea('NINEA12333');
+        $partenaire->setRegicomm('DKR00042');
+        $partenaire->setUser($user3);
         $manager->persist($user3);
+        $manager->persist($partenaire);
+        
         $manager->flush();
     }
 }
