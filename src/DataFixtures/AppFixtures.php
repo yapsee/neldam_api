@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\BankAccount;
+use App\Entity\Depot;
 use App\Entity\Partenaire;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -45,12 +47,44 @@ class AppFixtures extends Fixture
         $user3->setNom('EDK SARL');
         $user3->setIsActive(true);
         $user3->setEmail('edk@nldm.com');
-        $partenaire =new Partenaire();
-        $partenaire->setNinea('NINEA12333');
-        $partenaire->setRegicomm('DKR00042');
-        $partenaire->setUser($user3);
         $manager->persist($user3);
-        $manager->persist($partenaire);
+
+
+        $user4 = new User('caissier');
+        $user4->setUsername('fa');
+        $password = $this->encoder->encodePassword($user3, 'fa2020');
+        $user4->setPassword($password);
+        $user4->setRoles(['ROLE_CAISSIER']);
+        $user4->setNom('FA SAMB');
+        $user4->setIsActive(true);
+        $user4->setEmail('fa@nldm.com');
+        $manager->persist($user4);
+        
+        $partenaire1 =new Partenaire();
+        $partenaire1->setNinea('NINEA12333');
+        $partenaire1->setRegicomm('DKR00042');
+        $partenaire1->setUser($user3);
+        $manager->persist($partenaire1);
+        
+        $bankaccount1 = new BankAccount();
+        $a = "NLD-";
+        $b = rand(1000000000000, 9999999999999);
+        $numerocompte = $a . $b;
+        $bankaccount1->setNumeroCompte($numerocompte);
+      
+        $bankaccount1->setSolde('0');
+        $bankaccount1->setPartenaire($partenaire1);
+        $bankaccount1->setAdmin($user1);
+        $bankaccount1->setDatecreation(new \Datetime());
+        $manager->persist($bankaccount1);
+        
+        $depot1 = new Depot();
+        $depot1->setMontant(500000);
+        $depot1->setDatedepot(new \DateTime);
+        $depot1->setCaissier($user4);
+        $depot1->setCompte($bankaccount1);
+        $manager->persist($depot1);
+        
         
         $manager->flush();
     }

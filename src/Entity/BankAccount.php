@@ -26,7 +26,7 @@ class BankAccount
     private $numerocompte;
 
     /**
-     * @ORM\Column(type="bigint", length=255)
+     * @ORM\Column(type="integer", length=255)
      */
     private $solde;
 
@@ -45,6 +45,11 @@ class BankAccount
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts")
      */
     private $admin;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $datecreation;
 
     public function __construct()
     {
@@ -131,6 +136,18 @@ class BankAccount
     public function setAdmin(?User $admin): self
     {
         $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getDatecreation(): ?\DateTimeInterface
+    {
+        return $this->datecreation;
+    }
+
+    public function setDatecreation(\DateTimeInterface $datecreation): self
+    {
+        $this->datecreation = $datecreation;
 
         return $this;
     }
