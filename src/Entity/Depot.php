@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Hoa\Stream\Filter\Exception;
 use ApiPlatform\Core\Annotation\ApiResource;
+
 
 /**
  * @ApiResource()
@@ -50,6 +52,7 @@ class Depot
 
     public function setDatedepot(\DateTimeInterface $datedepot): self
     {
+        
         $this->datedepot = $datedepot;
 
         return $this;
@@ -60,8 +63,11 @@ class Depot
         return $this->montant;
     }
 
-    public function setMontant(string $montant): self
+    public function setMontant(int $montant): self
     {
+        if($montant < 500000){
+            throw new Exception("le montant a depose doit etre superieur ou egale a 500k");
+        }
         $this->montant = $montant;
 
         return $this;
