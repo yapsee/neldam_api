@@ -96,4 +96,10 @@ class Depot
 
         return $this;
     }
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+    }
 }

@@ -115,11 +115,19 @@ class User implements AdvancedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        // guarantee every user at least has ROLE_USER
+        if ($this->roles->getLibelle() == 'ADMIN_SYS') {
+            return array('ROLE_ADMIN_SYS');
+        } elseif ($this->roles->getLibelle() == 'ADMIN') {
+            return array('ROLE_ADMIN');
+        } elseif ($this->roles->getLibelle() == 'CAISSIER') {
+            return array('ROLE_CAISSIER');
+        } elseif ($this->roles->getLibelle() == 'PARTNER') {
+            return array('ROLE_PARTNER');
+        }
+        // guarantee every user at least has ROLE_USER
+    
     }
 
     public function setRoles(array $roles): self

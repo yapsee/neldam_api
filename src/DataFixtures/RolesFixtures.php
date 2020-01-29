@@ -12,10 +12,10 @@ class RolesFixtures extends Fixture
         $libelle=array("ADMIN_SYS","ADMIN","PARTNER","CAISSIER","USER");
         
         for($i=0;$i<count($libelle);$i++){
-            $role= new Roles();
-            $role->setLibelle($libelle[$i]);
+            $roles= new Roles();
+            $roles->setLibelle($libelle[$i]);
            
-            $manager->persist($role);
+            $manager->persist($roles);
         }
         $manager->flush();
     }
