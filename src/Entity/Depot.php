@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Hoa\Stream\Filter\Exception;
+
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -26,6 +28,7 @@ class Depot
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Groups({"read", "write"})
      */
     private $montant;
 
@@ -39,6 +42,7 @@ class Depot
      * @ORM\JoinColumn(nullable=false)
      */
     private $caissier;
+
 
     public function getId(): ?int
     {
@@ -65,9 +69,6 @@ class Depot
 
     public function setMontant(int $montant): self
     {
-        if($montant < 500000){
-            throw new Exception("le montant a depose doit etre superieur ou egale a 500k");
-        }
         $this->montant = $montant;
 
         return $this;
@@ -101,5 +102,10 @@ class Depot
      */
     public function eraseCredentials()
     {
+    }
+
+    public function __construct()
+    {
+        $this->datedepot = new \DateTime();
     }
 }

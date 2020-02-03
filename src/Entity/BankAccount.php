@@ -2,13 +2,24 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  
+ *  
+ * collectionOperations={
+ *         "get"={"normalization_context"={"groups"={"read"}}},
+ *         "post"={"denormalization_context"={"groups"={"write"}}}
+ * }
+ * 
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\BankAccountRepository")
  */
 class BankAccount
@@ -22,22 +33,27 @@ class BankAccount
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
+     * @ApiFilter(SearchFilter::class, properties={"numerocompte": "exact"})
+     * @Groups({"read", "write"})
      */
     private $numerocompte;
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Groups({"read", "write"})
      */
     private $solde;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="bankAccounts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "write"})
      */
     private $partenaire;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte")
+     * @Groups({"read", "write"})
      */
     private $depots;
 
@@ -51,9 +67,15 @@ class BankAccount
      */
     private $datecreation;
 
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();
+        $this->datecreation = new \DateTime();
+        $a = "NLD-";
+        $b = rand(100000, 999999);
+        $account = ($a . $b);
+        $this->numerocompte = $account;
     }
 
     public function getId(): ?int
@@ -68,6 +90,7 @@ class BankAccount
 
     public function setNumerocompte(string $numerocompte): self
     {
+
         $this->numerocompte = $numerocompte;
 
         return $this;
@@ -151,6 +174,8 @@ class BankAccount
 
         return $this;
     }
+ 
+    
   
 
 }

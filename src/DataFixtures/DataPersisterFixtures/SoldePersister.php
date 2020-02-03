@@ -5,6 +5,7 @@ namespace App\DataFixtures\DataPersisterFixtures;
 use App\Entity\Depot;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class SoldePersister implements DataPersisterInterface
 {
@@ -24,15 +25,20 @@ class SoldePersister implements DataPersisterInterface
     public function persist($data)
     {
             $deposit=$data->getMontant();
-          
-            $balance =$data->getCompte()->getSolde();
-              
-            $data->getCompte()->setSolde($deposit+ $balance);
+            $balance = $data->getCompte()->getSolde();
+            
+            if($deposit >500){
+           $data->getCompte()->setSolde($deposit+ $balance);
+            
                 
-                $data->eraseCredentials();
+            $data->eraseCredentials();
 
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
+            }
+            else{
+            throw new Exception("Le montant doit etre superieur ou égale à 500");
+            }
              
    }
 

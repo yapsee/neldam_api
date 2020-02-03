@@ -67,15 +67,9 @@ class AppFixtures extends Fixture
         $manager->persist($partenaire1);
         
         $bankaccount1 = new BankAccount();
-        $a = "NLD-";
-        $b = rand(1000000000000, 9999999999999);
-        $numerocompte = $a . $b;
-        $bankaccount1->setNumeroCompte($numerocompte);
-      
         $bankaccount1->setSolde('0');
         $bankaccount1->setPartenaire($partenaire1);
         $bankaccount1->setAdmin($user1);
-        $bankaccount1->setDatecreation(new \Datetime());
         $manager->persist($bankaccount1);
         
         $depot1 = new Depot();

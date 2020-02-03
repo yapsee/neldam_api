@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -29,6 +30,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"read", "write"})
      */
     private $email;
 
@@ -40,31 +42,35 @@ class User implements AdvancedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"read", "write"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read", "write"})
+     * 
      */
     private $isActive;
-    
+
     public function __construct($username)
     {
-       $this->IsActive = true;
-       $this->username = $username;
-       $this->depots = new ArrayCollection();
-       $this->bankAccounts = new ArrayCollection();
-        
+        $this->IsActive = true;
+        $this->username = $username;
+        $this->depots = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
     }
 
     /**
@@ -82,6 +88,7 @@ class User implements AdvancedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="admin")
      */
     private $bankAccounts;
+
 
     public function getId(): ?int
     {
@@ -115,19 +122,10 @@ class User implements AdvancedUserInterface
      */
     public function getRoles(): array
     {
+        $this->roles='ROLE_'.strtoupper($this->role->getLibelle());
+        return array($this->roles);
+        // guarantee every user at least has ROLE_USER
 
-        // guarantee every user at least has ROLE_USER
-        if ($this->roles->getLibelle() == 'ADMIN_SYS') {
-            return array('ROLE_ADMIN_SYS');
-        } elseif ($this->roles->getLibelle() == 'ADMIN') {
-            return array('ROLE_ADMIN');
-        } elseif ($this->roles->getLibelle() == 'CAISSIER') {
-            return array('ROLE_CAISSIER');
-        } elseif ($this->roles->getLibelle() == 'PARTNER') {
-            return array('ROLE_PARTNER');
-        }
-        // guarantee every user at least has ROLE_USER
-    
     }
 
     public function setRoles(array $roles): self
@@ -290,6 +288,4 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
-
-  
 }
