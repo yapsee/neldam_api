@@ -5,7 +5,6 @@ namespace App\Security\Voter;
 use Exception;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -78,6 +77,7 @@ class UserVoter extends Voter
                     return true;
                 }
                 break;
+            
         }
 
         throw new \Exception(sprintf('Vous n\'avez pas le droit!', $attribute));

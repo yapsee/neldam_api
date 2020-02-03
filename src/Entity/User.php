@@ -89,6 +89,11 @@ class User implements AdvancedUserInterface
      */
     private $bankAccounts;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
+     */
+    private $partenaire;
+
 
     public function getId(): ?int
     {
@@ -285,6 +290,18 @@ class User implements AdvancedUserInterface
                 $bankAccount->setAdmin(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
 
         return $this;
     }

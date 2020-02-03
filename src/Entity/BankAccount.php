@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\BankController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -12,13 +13,19 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
- *  
- *  
+ * denormalizationContext={"groups"={"write"}},
  * collectionOperations={
- *         "get"={"normalization_context"={"groups"={"read"}}},
- *         "post"={"denormalization_context"={"groups"={"write"}}}
- * }
- * 
+ *         "get"={
+ *          "normalization_context"={"groups"={"read"}}},
+ *         "post"={
+ * "security"="is_granted(['ROLE_ADMIN_SYS','ROLE_ADMIN'])", "security_message"="Seul ADMIN peut creer un compte partenaire"
+ * ,"controller"= BankController::class}
+ *     },
+ * itemOperations={
+ *     "get"={ 
+ * "security"="is_granted('ROLE_ADMIN_SYST')"},
+ *      "put"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut modifier donneees compte partenaire "}
+ * } 
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BankAccountRepository")
  */

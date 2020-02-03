@@ -36,7 +36,7 @@ class UserDataPersister implements DataPersisterInterface
     public function remove($data)
     {
 
-        $this->entityManager->persist($data);
+        $this->entityManager->remove($data);
         $this->entityManager->flush();
     }
 }
