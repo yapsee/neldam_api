@@ -6,6 +6,7 @@ use App\Entity\Depot;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SoldePersister implements DataPersisterInterface
 {
@@ -13,9 +14,10 @@ class SoldePersister implements DataPersisterInterface
 
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenstorage)
     {
         $this->entityManager = $entityManager;
+        $this->tokenstorage= $tokenstorage;
     }
 
     public function supports($data): bool
@@ -26,9 +28,11 @@ class SoldePersister implements DataPersisterInterface
     {
             $deposit=$data->getMontant();
             $balance = $data->getCompte()->getSolde();
+        $userConn = $this->tokenstorage->getToken()->getUser();
             
             if($deposit >500){
            $data->getCompte()->setSolde($deposit+ $balance);
+            $data->setCaissier($userConn);
             
                 
             $data->eraseCredentials();

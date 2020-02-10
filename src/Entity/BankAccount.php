@@ -13,19 +13,18 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
- * denormalizationContext={"groups"={"write"}},
+ *   normalizationContext={"groups"={"read"}},
+ *   denormalizationContext={"groups"={"write"}},
  * collectionOperations={
- *         "get"={
- *          "normalization_context"={"groups"={"read"}}},
+ *         "get"={},
  *         "post"={
- * "security"="is_granted(['ROLE_ADMIN_SYS','ROLE_ADMIN'])", "security_message"="Seul ADMIN peut creer un compte partenaire"
- * ,"controller"= BankController::class}
- *     },
- * itemOperations={
- *     "get"={ 
- * "security"="is_granted('ROLE_ADMIN_SYST')"},
- *      "put"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut modifier donneees compte partenaire "}
- * } 
+ *            "controller"= BankController::class}
+ *                      },
+ *     itemOperations={
+ *         "get"={}
+ *         
+ *                    }
+
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BankAccountRepository")
  */
@@ -39,33 +38,37 @@ class BankAccount
     private $id;
 
     /**
+     *  @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=false)
      * @ApiFilter(SearchFilter::class, properties={"numerocompte": "exact"})
-     * @Groups({"read", "write"})
+     
      */
     private $numerocompte;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="integer", length=255)
-     * @Groups({"read", "write"})
      */
     private $solde;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="bankAccounts")
-     * @ORM\JoinColumn(nullable=false)
      * @Groups({"read", "write"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="bankAccounts",cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+    
      */
     private $partenaire;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte")
      * @Groups({"read", "write"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte",cascade={"persist"})
+     
      */
     private $depots;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts")
+     * @Groups({"read"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts",cascade={"persist"})
      */
     private $admin;
 
@@ -79,7 +82,7 @@ class BankAccount
     {
         $this->depots = new ArrayCollection();
         $this->datecreation = new \DateTime();
-        $a = "NLD-";
+        $a = "NLDM-";
         $b = rand(100000, 999999);
         $account = ($a . $b);
         $this->numerocompte = $account;
@@ -180,6 +183,12 @@ class BankAccount
         $this->datecreation = $datecreation;
 
         return $this;
+    }
+      /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
     }
  
     

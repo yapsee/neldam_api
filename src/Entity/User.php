@@ -16,8 +16,15 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource(
- *  
- * )
+ * collectionOperations={
+ *         "get"={},
+ *         "post"={"access_control"="is_granted('ADD',object)"}
+ *                      },
+ *     itemOperations={
+ *         "get"={"access_control"="is_granted('GET',object)"},
+ *         "put"={"access_control"="is_granted('EDIT',object)"}
+ *                    }
+ *  )
  */
 class User implements AdvancedUserInterface
 {
@@ -29,8 +36,8 @@ class User implements AdvancedUserInterface
     private $id;
 
     /**
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"read", "write"})
      */
     private $email;
 
@@ -40,28 +47,27 @@ class User implements AdvancedUserInterface
     private $roles = [];
 
     /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
      * @Groups({"read", "write"})
+     * @var string The hashed password)
+     * @ORM\Column(type="string")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
      * @Groups({"read", "write"})
+     * @ORM\Column(type="string", length=255)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
      * @Groups({"read", "write"})
+     * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="boolean")
      * @Groups({"read", "write"})
-     * 
+     * @ORM\Column(type="boolean")
      */
     private $isActive;
 
@@ -74,25 +80,31 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
      */
     private $role;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="caissier")
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="caissier",cascade={"persist"})
      */
     private $depots;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="admin")
+     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="admin",cascade={"persist"})
      */
     private $bankAccounts;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users",cascade={"persist"})
      */
     private $partenaire;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $image;
 
 
     public function getId(): ?int
@@ -127,7 +139,7 @@ class User implements AdvancedUserInterface
      */
     public function getRoles(): array
     {
-        $this->roles='ROLE_'.strtoupper($this->role->getLibelle());
+        $this->roles ='ROLE_'.strtoupper($this->role->getLibelle());
         return array($this->roles);
         // guarantee every user at least has ROLE_USER
 
@@ -302,6 +314,18 @@ class User implements AdvancedUserInterface
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

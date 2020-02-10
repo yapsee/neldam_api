@@ -13,7 +13,7 @@ class BankController extends AbstractController
 {
 
 
-
+    private $tokenstorage;
 
     public function __construct(RolesRepository $repo, UserPasswordEncoderInterface $userPasswordEncoder)
     {
@@ -21,12 +21,13 @@ class BankController extends AbstractController
         $this->repo = $repo;
         $this->userPasswordEncoder = $userPasswordEncoder;
     }
-    private $tokenstorage;
+   
 
 
     public function __invoke(BankAccount $data, TokenStorageInterface $tokenstorage): BankAccount
     {
         $this->tokenstorage = $tokenstorage;
+    
 
         #recuperation du User connecte
 
@@ -34,10 +35,10 @@ class BankController extends AbstractController
 
         #verifier si partenaire existe?
 
-        $user = $data->getPartenaire()->getUser();
-        $idUser = $data->getPartenaire()->getUser()->getId();
+        $user = $data->getPartenaire()->getUsers()[0];
+        $idUser = $user->getId();
         //recuperation password (saisi)
-        $pass = $data->getPartenaire()->getUser()->getPassword();
+        $pass = $data->getPartenaire()->getUsers()[0]->getPassword();
         //montant premier depot
         $montant = ($data->getDepots()[count($data->getDepots()) - 1]->getMontant());
 

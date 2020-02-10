@@ -39,20 +39,9 @@ class AppFixtures extends Fixture
         $user2->setEmail('fatima@nldm.com');
         $manager->persist($user2);
 
-        $user3= new User('Partner');
-        $user3->setUsername('EDK');
-        $password = $this->encoder->encodePassword($user3, 'edk2020');
-        $user3->setPassword($password);
-        $user3->setRoles(['ROLE_PARTNER']);
-        $user3->setNom('EDK SARL');
-        $user3->setIsActive(true);
-        $user3->setEmail('edk@nldm.com');
-        $manager->persist($user3);
-
-
         $user4 = new User('caissier');
         $user4->setUsername('fa');
-        $password = $this->encoder->encodePassword($user3, 'fa2020');
+        $password = $this->encoder->encodePassword($user4, 'fa2020');
         $user4->setPassword($password);
         $user4->setRoles(['ROLE_CAISSIER']);
         $user4->setNom('FA SAMB');
@@ -63,8 +52,18 @@ class AppFixtures extends Fixture
         $partenaire1 =new Partenaire();
         $partenaire1->setNinea('NINEA12333');
         $partenaire1->setRegicomm('DKR00042');
-        $partenaire1->setUser($user3);
         $manager->persist($partenaire1);
+        
+        $user3 = new User('Partner');
+        $user3->setUsername('EDK');
+        $password = $this->encoder->encodePassword($user3, 'edk2020');
+        $user3->setPassword($password);
+        $user3->setRoles(['ROLE_PARTNER']);
+        $user3->setNom('EDK SARL');
+        $user3->setIsActive(true);
+        $user3->setPartenaire($partenaire1);
+        $user3->setEmail('edk@nldm.com');
+        $manager->persist($user3);
         
         $bankaccount1 = new BankAccount();
         $bankaccount1->setSolde('0');

@@ -4,7 +4,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
@@ -22,13 +21,14 @@ class Depot
     private $id;
 
     /**
-     * @ORM\Column(type="datetime", length=255)
+     * @ORM\Column(type="datetime")
      */
     private $datedepot;
 
     /**
-     * @ORM\Column(type="integer", length=255)
      * @Groups({"read", "write"})
+     * @ORM\Column(type="integer", length=255)
+    
      */
     private $montant;
 
@@ -44,9 +44,14 @@ class Depot
     private $caissier;
 
 
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function __construct()
+    {
+        $this->datedepot = new \DateTime();
     }
 
     public function getDatedepot(): ?\DateTimeInterface
@@ -104,8 +109,5 @@ class Depot
     {
     }
 
-    public function __construct()
-    {
-        $this->datedepot = new \DateTime();
-    }
+ 
 }

@@ -30,7 +30,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'ADD', 'VIEW'])
+        return in_array($attribute, ['EDIT', 'ADD', 'GET'])
             && $subject instanceof \App\Entity\User;
     }
     /** @var User $subject */
@@ -42,16 +42,14 @@ class UserVoter extends Voter
             return true;
         }
         $userConn = $this->tokenStorage->getToken();
-        if (($userConn->getRoles()[0] == self::ROLE_CAISSIER) && ($subject->getRoles()[0] == self::ROLE_ADMIN_SYS 
-        || $subject->getRoles()[0] == self::ROLE_ADMIN
-            || $subject->getRoles()[0] == self::ROLE_CAISSIER)){
+        if ($userConn->getRoles()[0] == self::ROLE_CAISSIER) {
   
-                return false;
+                throw new Exception ("UN CAISSIER NE PEUT PAS CREER OU MODIFIER UN USER") ;
             }
         if (($userConn->getRoles()[0] == self::ROLE_ADMIN) && ($subject->getRoles()[0] == self::ROLE_ADMIN_SYS 
         || $subject->getRoles()[0] == self::ROLE_ADMIN)) {
- 
-                return false;
+
+            throw new Exception("UN ADMIN NE PEUT PAS CREER UN ADMIN SYST OU UN ADMIN");
             }
         
         $user = $token->getUser();
@@ -63,23 +61,20 @@ class UserVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'EDIT':
-                if ($this->security->isGranted(self::ROLE_ADMIN)) {
-                    return true;
-                }
+                return  ($this->security->isGranted(self::ROLE_ADMIN)) ;
                 break;
             case 'ADD':
-                if ($this->security->isGranted(self::ROLE_ADMIN)) {
-                    return true;
-                }
+                return ($this->security->isGranted(self::ROLE_ADMIN));
+               
                 break;
-            case 'VIEW':
-                if ($this->security->isGranted(self::ROLE_ADMIN)) {
-                    return true;
-                }
+            case 'GET':
+                return ($this->security->isGranted(self::ROLE_ADMIN));
+                    
+               
                 break;
             
         }
 
-        throw new \Exception(sprintf('Vous n\'avez pas le droit!', $attribute));
+        throw new Exception(sprintf('Vous n\'avez pas le droit!', $attribute));
     }
 }

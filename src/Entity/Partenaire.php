@@ -3,15 +3,18 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
+
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups"={"read"}},
+ *   denormalizationContext={"groups"={"write"}})
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
  */
 class Partenaire
@@ -24,33 +27,30 @@ class Partenaire
     private $id;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      * @ApiFilter(SearchFilter::class, properties={"ninea": "exact"})
-     * @Groups({"read", "write"})
      */
     private $ninea;
 
     /**
-     * @ORM\Column(type="string", length=255)
      * @Groups({"read", "write"})
+     * @ORM\Column(type="string", length=255)
+    
      */
     private $regicomm;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="partenaire", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="partenaire", orphanRemoval=true,cascade={"persist"})
      */
     private $bankAccounts;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read", "write"})
-     */
-    private $user;
+   
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
-     */
+     * @Groups({"read","write"})
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire",cascade={"persist"})
+    */
     private $users;
 
     public function __construct()
@@ -119,17 +119,7 @@ class Partenaire
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
+  
 
     /**
      * @return Collection|User[]
