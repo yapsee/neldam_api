@@ -14,6 +14,9 @@ class UserVoter extends Voter
 {
     const ROLE_ADMIN_SYS = 'ROLE_ADMIN_SYS';
     const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_PARTNER = 'ROLE_PARTNER';
+    const ROLE_ADMIN_PARTN = 'ROLE_ADMIN_PARTN';
+    const ROLE_USER_PARTN = 'ROLE_USER_PARTN ';
     const ROLE_CAISSIER = 'ROLE_CAISSIER';
     private $decisionManager;
     private $tokenStorage;
@@ -42,15 +45,29 @@ class UserVoter extends Voter
             return true;
         }
         $userConn = $this->tokenStorage->getToken();
-        if ($userConn->getRoles()[0] == self::ROLE_CAISSIER) {
+        if ($userConn->getRoles()[0] == self::ROLE_CAISSIER || $userConn->getRoles()[0] == self::ROLE_USER_PARTN) {
   
-                throw new Exception ("UN CAISSIER NE PEUT PAS CREER OU MODIFIER UN USER") ;
+                throw new Exception ("UN CAISSIER OU UN USER PARTENAIRE NE PEUT PAS CREER OU MODIFIER UN USER") ;
             }
         if (($userConn->getRoles()[0] == self::ROLE_ADMIN) && ($subject->getRoles()[0] == self::ROLE_ADMIN_SYS 
         || $subject->getRoles()[0] == self::ROLE_ADMIN)) {
 
-            throw new Exception("UN ADMIN NE PEUT PAS CREER UN ADMIN SYST OU UN ADMIN");
+            throw new Exception("UN ADMIN NE PEUT PAS CREER UN ADMIN SYST OU UN ADMIN ");
             }
+        if (($userConn->getRoles()[0] == self::ROLE_ADMIN) && ($subject->getRoles()[0] == self::ROLE_ADMIN_PARTN
+            || $subject->getRoles()[0] == self::ROLE_PARTNER || $subject->getRoles()[0] == self::ROLE_USER_PARTN)) {
+
+           return true;
+        }
+        if (($userConn->getRoles()[0] == self::ROLE_PARTNER ) && ($subject->getRoles()[0] == self::ROLE_USER_PARTN
+            || $subject->getRoles()[0] == self::ROLE_ADMIN_PARTN)) {
+
+            return true;
+        }
+        if ($userConn->getRoles()[0] == self::ROLE_ADMIN_PARTN && $subject->getRoles()[0] == self::ROLE_USER_PARTN) {
+
+            return true;
+        }
         
         $user = $token->getUser();
         // if the user is anonymous, do not grant access
@@ -61,17 +78,14 @@ class UserVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'EDIT':
-                return  ($this->security->isGranted(self::ROLE_ADMIN)) ;
+               
                 break;
             case 'ADD':
-                return ($this->security->isGranted(self::ROLE_ADMIN));
                
                 break;
             case 'GET':
-                return ($this->security->isGranted(self::ROLE_ADMIN));
-                    
                
-                break;
+              break;
             
         }
 

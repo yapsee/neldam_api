@@ -18,7 +18,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * collectionOperations={
  *         "get"={},
  *         "post"={
- *            "controller"= BankController::class}
+ *            "controller"= BankController::class,}
  *                      },
  *     itemOperations={
  *         "get"={}
@@ -191,7 +191,4 @@ class BankAccount
     {
     }
  
-    
-  
-
-}
+    }
