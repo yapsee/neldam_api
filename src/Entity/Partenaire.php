@@ -53,6 +53,11 @@ class Partenaire
     */
     private $users;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Contrat", cascade={"persist", "remove"})
+     */
+    private $contrat;
+
     public function __construct()
     {
         $this->bankAccounts = new ArrayCollection();
@@ -148,6 +153,18 @@ class Partenaire
                 $user->setPartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContrat(): ?Contrat
+    {
+        return $this->contrat;
+    }
+
+    public function setContrat(?Contrat $contrat): self
+    {
+        $this->contrat = $contrat;
 
         return $this;
     }

@@ -3,7 +3,9 @@
 namespace App\DataFixtures\DataPersisterFixtures;
 
 use App\Entity\BankAccount;
+use App\Repository\ContratRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -15,12 +17,15 @@ class PartPersister implements DataPersisterInterface
 
     private $entityManager;
     private  $tokenstorage;
+    private  $repo;
+    
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder, TokenStorageInterface $tokenstorage)
+    public function __construct(EntityManagerInterface $entityManager,ContratRepository $repo, UserPasswordEncoderInterface $userPasswordEncoder, TokenStorageInterface $tokenstorage)
     {
         $this->entityManager = $entityManager;
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->tokenstorage = $tokenstorage;
+        $this->repo= $repo;
     }
 
     public function supports($data): bool
@@ -37,7 +42,21 @@ class PartPersister implements DataPersisterInterface
         //recuperation password (saisi)
         $pass = $partner->getPassword();
         $userConn = $this->tokenstorage->getToken()->getUser();
-        //montant premier depot
+      //generer un contrat
+      $contrats = $this->repo->findAll();
+      $terme =  $contrats[0]->getTerme();
+      //Personnaliser contrat
+     
+      $nompart = $data->getPartenaire()->getUsers()[0]->getNom();
+      
+      $ninea =  $data->getPartenaire()->getNinea();
+      $compte= $data->getNumerocompte();
+                  $search = ['#nom', '#ninea', '#compte'];
+                  $replace = [$nompart, $ninea,$compte];
+      $termefinale = str_replace($search, $replace, $terme);
+          
+      
+  //montant premier depot
 
         if ($idUser == null) {
             $partner->setPassword($this->userPasswordEncoder->encodePassword($partner, $pass));
@@ -48,6 +67,7 @@ class PartPersister implements DataPersisterInterface
 
             $this->entityManager->persist($data);
             $this->entityManager->flush();
+            return new JsonResponse ($termefinale);
         } else {
             throw new Exception;
         }
