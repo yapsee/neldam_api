@@ -28,10 +28,10 @@ class SoldePersister implements DataPersisterInterface
     {
             $deposit=$data->getMontant();
             $balance = $data->getCompte()->getSolde();
-        $userConn = $this->tokenstorage->getToken()->getUser();
+            $userConn = $this->tokenstorage->getToken()->getUser();
             
             if($deposit >500){
-           $data->getCompte()->setSolde($deposit+ $balance);
+            $data->getCompte()->setSolde($deposit+ $balance);
             $data->setCaissier($userConn);
             
                 

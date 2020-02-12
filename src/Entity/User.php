@@ -77,6 +77,7 @@ class User implements AdvancedUserInterface
         $this->username = $username;
         $this->depots = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
+        $this->affectations = new ArrayCollection();
     }
 
     /**
@@ -105,6 +106,11 @@ class User implements AdvancedUserInterface
      * @ORM\Column(type="blob", nullable=true)
      */
     private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="affectedto")
+     */
+    private $affectations;
 
 
     public function getId(): ?int
@@ -326,6 +332,37 @@ class User implements AdvancedUserInterface
     public function setImage($image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Affectation[]
+     */
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
+
+    public function addAffectation(Affectation $affectation): self
+    {
+        if (!$this->affectations->contains($affectation)) {
+            $this->affectations[] = $affectation;
+            $affectation->setAffectedto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffectation(Affectation $affectation): self
+    {
+        if ($this->affectations->contains($affectation)) {
+            $this->affectations->removeElement($affectation);
+            // set the owning side to null (unless already changed)
+            if ($affectation->getAffectedto() === $this) {
+                $affectation->setAffectedto(null);
+            }
+        }
 
         return $this;
     }

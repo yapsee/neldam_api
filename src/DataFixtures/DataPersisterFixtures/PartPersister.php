@@ -34,18 +34,16 @@ class PartPersister implements DataPersisterInterface
     }
     public function persist($data)
     {
-     
-        #verifier si partenaire existe?
+        #verifier si partenaire existe pour lui passer le contrat au moment de la creation de compte
 
-        $partner = $data->getPartenaire()->getUsers()[0];
-        $idUser = $data->getPartenaire()->getUsers()[0]->getId();
-        //recuperation password (saisi)
-        $pass = $partner->getPassword();
-        $userConn = $this->tokenstorage->getToken()->getUser();
-      //generer un contrat
+        $userpart = $data->getPartenaire()->getUsers()[0];
+
+        $idUser = $userpart->getId();
+        
+      //Personnaliser contrat
       $contrats = $this->repo->findAll();
       $terme =  $contrats[0]->getTerme();
-      //Personnaliser contrat
+     
      
       $nompart = $data->getPartenaire()->getUsers()[0]->getNom();
       
@@ -55,22 +53,13 @@ class PartPersister implements DataPersisterInterface
                   $replace = [$nompart, $ninea,$compte];
       $termefinale = str_replace($search, $replace, $terme);
           
-      
-  //montant premier depot
-
-        if ($idUser == null) {
-            $partner->setPassword($this->userPasswordEncoder->encodePassword($partner, $pass));
-
-            $data->getDepots()[0]->setCaissier($userConn);
-            $data->setAdmin($userConn);
-            $data->eraseCredentials();
 
             $this->entityManager->persist($data);
             $this->entityManager->flush();
+        if ($idUser == null) {
             return new JsonResponse ($termefinale);
-        } else {
-            throw new Exception;
-        }
+        } //retoune contrat si compte nouveau
+        
     }
 
     public function remove($data)

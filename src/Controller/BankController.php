@@ -37,33 +37,25 @@ class BankController extends AbstractController
         $userConn = $this->tokenstorage->getToken()->getUser();
         $data->setAdmin($userConn);
 
-        #verifier si partenaire existe?
+        #recuperer le mot de passe por encodage
 
         $userpart = $data->getPartenaire()->getUsers()[0];
       
-        $idUser = $userpart->getId();
-      
-      
-        //recuperation password (saisi)
+      //recuperation password (saisi)
         $pass = $data->getPartenaire()->getUsers()[0]->getPassword();
        
-        //montant premier depot
-        
-
-        if ($idUser == null) {
-          $userpart->setPassword($this->userPasswordEncoder->encodePassword($userpart, $pass));
+         $userpart->setPassword($this->userPasswordEncoder->encodePassword($userpart, $pass));
             
+         $userpart->setRoles([$this->repo->findByLibelle("PARTNER")[0]]);
+                 //montant premier depot
            
-            $userpart->setRoles([$this->repo->findByLibelle("PARTNER")[0]]);
-           
-          
-        }
         $montant = $data->getDepots()[0]->getMontant();
        
-
-        if ($montant >= 500000) {
+          if ($montant >= 500000) {
+            $data->getDepots()[0]->setCaissier($userConn);
            
             $data->setSolde($montant);
+            return $data;
            
          
         } else {
@@ -71,6 +63,5 @@ class BankController extends AbstractController
         }
 
 
-        return $data;
     }
 }

@@ -77,6 +77,11 @@ class BankAccount
      */
     private $datecreation;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="compte")
+     */
+    private $affectations;
+
 
     public function __construct()
     {
@@ -86,6 +91,7 @@ class BankAccount
         $b = rand(100000, 999999);
         $account = ($a . $b);
         $this->numerocompte = $account;
+        $this->affectations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,6 +195,37 @@ class BankAccount
      */
     public function eraseCredentials()
     {
+    }
+
+    /**
+     * @return Collection|Affectation[]
+     */
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
+
+    public function addAffectation(Affectation $affectation): self
+    {
+        if (!$this->affectations->contains($affectation)) {
+            $this->affectations[] = $affectation;
+            $affectation->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffectation(Affectation $affectation): self
+    {
+        if ($this->affectations->contains($affectation)) {
+            $this->affectations->removeElement($affectation);
+            // set the owning side to null (unless already changed)
+            if ($affectation->getCompte() === $this) {
+                $affectation->setCompte(null);
+            }
+        }
+
+        return $this;
     }
  
     }
