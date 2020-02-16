@@ -10,14 +10,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SoldePersister implements DataPersisterInterface
 {
-#Persisting balance of an account been on it 2days
+    #Persisting balance of an account been on it 2days
 
     private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenstorage)
     {
         $this->entityManager = $entityManager;
-        $this->tokenstorage= $tokenstorage;
+        $this->tokenstorage = $tokenstorage;
     }
 
     public function supports($data): bool
@@ -26,25 +26,23 @@ class SoldePersister implements DataPersisterInterface
     }
     public function persist($data)
     {
-            $deposit=$data->getMontant();
-            $balance = $data->getCompte()->getSolde();
-            $userConn = $this->tokenstorage->getToken()->getUser();
-            
-            if($deposit >500){
-            $data->getCompte()->setSolde($deposit+ $balance);
+        $deposit = $data->getMontant();
+        $balance = $data->getCompte()->getSolde();
+        $userConn = $this->tokenstorage->getToken()->getUser();
+
+        if ($deposit > 500) {
+            $data->getCompte()->setSolde($deposit + $balance);
             $data->setCaissier($userConn);
-            
-                
+
+
             $data->eraseCredentials();
 
-                $this->entityManager->persist($data);
-                $this->entityManager->flush();
-            }
-            else{
+            $this->entityManager->persist($data);
+            $this->entityManager->flush();
+        } else {
             throw new Exception("Le montant doit etre superieur ou égale à 500");
-            }
-             
-   }
+        }
+    }
 
     public function remove($data)
     {
@@ -53,5 +51,3 @@ class SoldePersister implements DataPersisterInterface
         $this->entityManager->flush();
     }
 }
-
- 

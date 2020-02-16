@@ -8,7 +8,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *         "get"={},
+ *         "post"={"access_control"="is_granted('ADD',object)"},
+ *                      },
+ *     itemOperations={
+ *         "get"={"access_control"="is_granted('GET',object)"},
+ *               }
+ * 
+ *  )
  * @ORM\Entity(repositoryClass="App\Repository\DepotRepository")
  */
 class Depot

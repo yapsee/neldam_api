@@ -6,7 +6,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource( collectionOperations={
+ *         "get"={},
+ *         "post"={"access_control"="is_granted('ADD',object)",
+ *            "controller"= BankController::class,
+ * }
+ *                 },
+ *     itemOperations={
+ *         "get"={},
+ *          "put"={"access_control"="is_granted('EDIT',object)"},
+ *         
+ *                    })
  * @ORM\Entity(repositoryClass="App\Repository\AffectationRepository")
  */
 class Affectation
@@ -39,6 +49,11 @@ class Affectation
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affecation")
+     */
+    private $affectedby;
 
     public function getId(): ?int
     {
@@ -89,6 +104,18 @@ class Affectation
     public function setCompte(?BankAccount $compte): self
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    public function getAffectedby(): ?User
+    {
+        return $this->affectedby;
+    }
+
+    public function setAffectedby(?User $affectedby): self
+    {
+        $this->affectedby = $affectedby;
 
         return $this;
     }

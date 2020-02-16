@@ -6,6 +6,7 @@ use App\Entity\Depot;
 use App\Entity\BankAccount;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\ImageController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,8 +23,27 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *                      },
  *     itemOperations={
  *         "get"={"access_control"="is_granted('GET',object)"},
- *         "put"={"access_control"="is_granted('EDIT',object)"}
+ *         "put"={"access_control"="is_granted('EDIT',object)",
+ *  "controller"=ImageController::class,
+ *             "deserialize"=false,
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"}
  *                    }
+ *       }
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
  *  )
  */
 class User implements AdvancedUserInterface
@@ -78,6 +98,7 @@ class User implements AdvancedUserInterface
         $this->depots = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
         $this->affectations = new ArrayCollection();
+        $this->affecation = new ArrayCollection();
     }
 
     /**
@@ -103,6 +124,7 @@ class User implements AdvancedUserInterface
     private $partenaire;
 
     /**
+
      * @ORM\Column(type="blob", nullable=true)
      */
     private $image;
@@ -111,6 +133,11 @@ class User implements AdvancedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="affectedto")
      */
     private $affectations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="affectedby")
+     */
+    private $affecation;
 
 
     public function getId(): ?int
@@ -361,6 +388,37 @@ class User implements AdvancedUserInterface
             // set the owning side to null (unless already changed)
             if ($affectation->getAffectedto() === $this) {
                 $affectation->setAffectedto(null);
+            }
+        }
+
+        return $this;
+    }
+//relation entre affectation et celui qui affecte affectedby dans affectation
+    /**
+     * @return Collection|Affectation[]
+     */
+    public function getAffecation(): Collection
+    {
+        return $this->affecation;
+    }
+
+    public function addAffecation(Affectation $affecation): self
+    {
+        if (!$this->affecation->contains($affecation)) {
+            $this->affecation[] = $affecation;
+            $affecation->setAffectedby($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffecation(Affectation $affecation): self
+    {
+        if ($this->affecation->contains($affecation)) {
+            $this->affecation->removeElement($affecation);
+            // set the owning side to null (unless already changed)
+            if ($affecation->getAffectedby() === $this) {
+                $affecation->setAffectedby(null);
             }
         }
 

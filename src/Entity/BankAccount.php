@@ -17,14 +17,15 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *   denormalizationContext={"groups"={"write"}},
  * collectionOperations={
  *         "get"={},
- *         "post"={
- *            "controller"= BankController::class,}
- *                      },
+ *         "post"={"access_control"="is_granted('ADD',object)",
+ *            "controller"= BankController::class,
+ * }
+ *                 },
  *     itemOperations={
- *         "get"={}
+ *         "get"={},
+ *          "put"={"access_control"="is_granted('EDIT',object)"},
  *         
  *                    }
-
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BankAccountRepository")
  */

@@ -45,9 +45,7 @@ class Partenaire
      */
     private $bankAccounts;
 
-   
-
-    /**
+     /**
      * @Groups({"read","write"})
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire",cascade={"persist"})
     */
