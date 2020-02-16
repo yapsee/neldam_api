@@ -64,7 +64,7 @@ class UserVoter extends Voter
 
             return true;
         }
-        if ($userConn->getRoles()[0] == self::ROLE_ADMIN_PARTN ) {
+        if ($userConn->getRoles()[0] == self::ROLE_ADMIN_PARTN && $subject->getRoles()[0] == self::ROLE_USER_PARTN) {
 
             return true;
         }

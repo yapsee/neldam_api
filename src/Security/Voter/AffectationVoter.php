@@ -28,7 +28,6 @@ class AffectationVoter extends Voter
         //partenaire user qu'on affecte
         $caissierpartid = $subject->getAffectedTo()->getPartenaire()->getId();
         if (($userpartid == $caissierpartid ) && ($userpartid == $compteid)) {
-            $subject->setAffectedto($user);
             return true;
         }
         
