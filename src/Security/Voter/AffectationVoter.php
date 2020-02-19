@@ -14,28 +14,28 @@ class AffectationVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['ADD','EDIT'])
+        return in_array($attribute, ['ADD', 'EDIT'])
             && $subject instanceof \App\Entity\Affectation;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
-        //partenaire du Userconn
-        $userpartid = $user->getpartenaire()->getId();
-        //compte partenaire a affecte
+        //id partenaire de celui qui affecte
+        $userpartid = $user->getPartenaire()->getId();
+        //id compte partenaire a affecte
         $compteid =  $subject->getCompte()->getPartenaire()->getId();
-        //partenaire user qu'on affecte
+        //id partenaire user qu'on affecte
         $caissierpartid = $subject->getAffectedTo()->getPartenaire()->getId();
-        if (($userpartid == $caissierpartid ) && ($userpartid == $compteid)) {
+        if (($userpartid == $caissierpartid) && ($userpartid == $compteid)) {
             return true;
         }
-        
+
         if (($user->getRole()->getLibelle() == "ADMIN_SYS") || ($user->getRole()->getLibelle() == "ADMIN_SYS ")) {
             return true;
         }
 
-        
+
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
@@ -51,9 +51,8 @@ class AffectationVoter extends Voter
                 // logic to determine if the user can VIEW
                 // return true or false
                 break;
-          
         }
 
-        throw new Exception("Vous n'avez pas le droit d\'affecter un compte");
+        throw new Exception("Vous n'avez pas le droit d'affecter un compte car vous n'etes pas chez le meme partenaire");
     }
 }

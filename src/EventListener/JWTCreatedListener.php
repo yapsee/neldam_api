@@ -25,7 +25,7 @@ class JWTCreatedListener
             throw new DisabledException("Vous etes temporairement bloque!");
         }
         //BLoquer partenaire et ses users
-        elseif($user->getPartenaire !== null && !$user->getPartenaire()->getUsers()[0]->getIsactive()){
+        elseif($user->getPartenaire() !== null && !$user->getPartenaire()->getUsers()[0]->getIsactive()){
 
             throw new DisabledException("Veuillez vous rapprocher aupres de votre agence!");
         }

@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\AffectationController;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource( collectionOperations={
+ * @ApiResource(
+ * collectionOperations={
  *         "get"={},
  *         "post"={"access_control"="is_granted('ADD',object)",
- *            "controller"= BankController::class,
+ *            "controller"= AffectationController::class,
  * }
  *                 },
  *     itemOperations={
@@ -51,7 +53,7 @@ class Affectation
     private $compte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affecation")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectation")
      */
     private $affectedby;
 

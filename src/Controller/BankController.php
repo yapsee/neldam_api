@@ -16,7 +16,7 @@ class BankController extends AbstractController
     private $tokenstorage;
     private $userPasswordEncoder;
     private  $repo;
-    
+
 
     public function __construct(RolesRepository $repo, UserPasswordEncoderInterface $userPasswordEncoder)
     {
@@ -24,13 +24,13 @@ class BankController extends AbstractController
         $this->repo = $repo;
         $this->userPasswordEncoder = $userPasswordEncoder;
     }
-   
+
 
 
     public function __invoke(BankAccount $data, TokenStorageInterface $tokenstorage): BankAccount
     {
         $this->tokenstorage = $tokenstorage;
-    
+
 
         #recuperation du User connecte
 
@@ -40,28 +40,24 @@ class BankController extends AbstractController
         #recuperer le mot de passe por encodage
 
         $userpart = $data->getPartenaire()->getUsers()[0];
-      
-      //recuperation password (saisi)
+
+        //recuperation password (saisi)
         $pass = $data->getPartenaire()->getUsers()[0]->getPassword();
-       
-         $userpart->setPassword($this->userPasswordEncoder->encodePassword($userpart, $pass));
-            
-         $userpart->setRoles([$this->repo->findByLibelle("PARTNER")[0]]);
-                 //montant premier depot
-           
+
+        $userpart->setPassword($this->userPasswordEncoder->encodePassword($userpart, $pass));
+
+        $userpart->setRoles([$this->repo->findByLibelle("PARTNER")[0]]);
+        //montant premier depot
+
         $montant = $data->getDepots()[0]->getMontant();
-       
-          if ($montant >= 500000) {
+
+        if ($montant >= 500000) {
             $data->getDepots()[0]->setCaissier($userConn);
-           
+
             $data->setSolde($montant);
             return $data;
-           
-         
         } else {
             throw new Exception("Le montant doit etre superieur ou égale à 500.000");
         }
-
-
     }
 }

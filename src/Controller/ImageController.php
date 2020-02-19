@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 
-class ImageController 
+class ImageController
 {
 
     public function __invoke(User $data): User
