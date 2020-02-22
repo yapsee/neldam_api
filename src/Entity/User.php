@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *                      },
  *     itemOperations={
  *         "get"={"access_control"="is_granted('GET',object)"},
- *         "put"={"access_control"="is_granted('EDIT',object)",
+ *         "patch"={"access_control"="is_granted('EDIT',object)",
  *  "controller"=ImageController::class,
  *             "deserialize"=false,
  *             "openapi_context"={
@@ -99,6 +99,7 @@ class User implements AdvancedUserInterface
         $this->bankAccounts = new ArrayCollection();
         $this->affectations = new ArrayCollection();
         $this->affecation = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     /**
@@ -138,6 +139,11 @@ class User implements AdvancedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="affectedby")
      */
     private $affecation;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transactions", mappedBy="userdepot")
+     */
+    private $transactions;
 
 
     public function getId(): ?int
@@ -419,6 +425,37 @@ class User implements AdvancedUserInterface
             // set the owning side to null (unless already changed)
             if ($affecation->getAffectedby() === $this) {
                 $affecation->setAffectedby(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transactions[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transactions $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setUserdepot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transactions $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getUserdepot() === $this) {
+                $transaction->setUserdepot(null);
             }
         }
 
