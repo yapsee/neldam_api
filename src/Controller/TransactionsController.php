@@ -90,13 +90,13 @@ class TransactionsController extends AbstractController
         #parts des entites
         $partetat = $frais *0.4;
         $partsyst = $frais * 0.3;
-        $partdepot = $frais * 0.1;
-        $partdenvoi = $frais * 0.2;
+        $partenvoi = $frais * 0.1;
+        $partretrait = $frais * 0.2;
         
            $data->setPartetat($partetat);
            $data->setPartsysteme($partsyst);
-           $data->setPartcompteenvoi($partdepot);
-           $data->setPartcompteretrait($partdenvoi);
+           $data->setPartcompteenvoi($partenvoi);
+           $data->setPartcompteretrait($partretrait);
     
      
 

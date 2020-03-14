@@ -32,6 +32,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 class BankAccount
 {
     /**
+     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -74,6 +75,7 @@ class BankAccount
     private $admin;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="datetime")
      */
     private $datecreation;
@@ -88,7 +90,7 @@ class BankAccount
      */
     private $transactions;
 
-   
+
 
     public function __construct()
     {
@@ -199,7 +201,7 @@ class BankAccount
 
         return $this;
     }
-      /**
+    /**
      * @see UserInterface
      */
     public function eraseCredentials()
@@ -267,5 +269,4 @@ class BankAccount
 
         return $this;
     }
-
 }

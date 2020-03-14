@@ -17,6 +17,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource(
+ *  normalizationContext={"groups"={"read"}},
+ *   denormalizationContext={"groups"={"write"}},
  * collectionOperations={
  *         "get"={},
  *         "post"={"access_control"="is_granted('ADD',object)"}
@@ -46,9 +48,10 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *             }
  *  )
  */
-class User implements AdvancedUserInterface
+class User implements UserInterface
 {
     /**
+   
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -93,7 +96,7 @@ class User implements AdvancedUserInterface
 
     public function __construct($username)
     {
-        $this->IsActive = true;
+        $this->isActive = true;
         $this->username = $username;
         $this->depots = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
@@ -178,7 +181,7 @@ class User implements AdvancedUserInterface
      */
     public function getRoles(): array
     {
-        $this->roles ='ROLE_'.strtoupper($this->role->getLibelle());
+        $this->roles = 'ROLE_' . strtoupper($this->role->getLibelle());
         return array($this->roles);
         // guarantee every user at least has ROLE_USER
 
@@ -399,7 +402,7 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
-//relation entre affectation et celui qui affecte affectedby dans affectation
+    //relation entre affectation et celui qui affecte affectedby dans affectation
     /**
      * @return Collection|Affectation[]
      */

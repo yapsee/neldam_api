@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -23,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Depot
 {
     /**
+     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -70,7 +72,7 @@ class Depot
 
     public function setDatedepot(\DateTimeInterface $datedepot): self
     {
-        
+
         $this->datedepot = $datedepot;
 
         return $this;
@@ -117,6 +119,4 @@ class Depot
     public function eraseCredentials()
     {
     }
-
- 
 }
