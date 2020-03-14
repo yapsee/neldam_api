@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *                      },
  *     itemOperations={
  *         "get"={"access_control"="is_granted('GET',object)"},
- *         "patch"={"access_control"="is_granted('EDIT',object)",
+ *         "put"={"access_control"="is_granted('EDIT',object)",
  *  "controller"=ImageController::class,
  *             "deserialize"=false,
  *             "openapi_context"={
